@@ -13,10 +13,10 @@ void TiltInput::setup() {
 	const TiltOptions& options = Storage::getInstance().getAddonOptions().tiltOptions;
 	tiltSOCDMode = options.tiltSOCDMode;
 
-	mapAnalogLSXNeg = new GamepadButtonMapping(0);
-	mapAnalogLSXPos = new GamepadButtonMapping(0);
-	mapAnalogLSYNeg = new GamepadButtonMapping(0);
-	mapAnalogLSYPos = new GamepadButtonMapping(0);
+	mapAnalogLSXNeg = new GamepadButtonMapping(GAMEPAD_MASK_LEFT);
+	mapAnalogLSXPos = new GamepadButtonMapping(GAMEPAD_MASK_RIGHT);
+	mapAnalogLSYNeg = new GamepadButtonMapping(GAMEPAD_MASK_UP);
+	mapAnalogLSYPos = new GamepadButtonMapping(GAMEPAD_MASK_DOWN);
 	mapAnalogRSXNeg = new GamepadButtonMapping(GAMEPAD_MASK_LEFT);
 	mapAnalogRSXPos = new GamepadButtonMapping(GAMEPAD_MASK_RIGHT);
 	mapAnalogRSYNeg = new GamepadButtonMapping(GAMEPAD_MASK_UP);
@@ -159,32 +159,32 @@ void TiltInput::OverrideGamepad(Gamepad* gamepad, uint8_t dpad1, uint8_t dpad2) 
             gamepad->state.dpad |= dpad2;
         } else {
             // prioritize tilt 1
-            leftXValue = getAnalogValue((values & mapAnalogLSXNeg->pinMask), (values & mapAnalogLSXPos->pinMask)) + (midValue - getAnalogValue((values & mapAnalogLSXNeg->pinMask), (values & mapAnalogLSXPos->pinMask))) * scaledTilt1FactorLeftX;
-            leftYValue = getAnalogValue((values & mapAnalogLSYNeg->pinMask), (values & mapAnalogLSYPos->pinMask)) + (midValue - getAnalogValue((values & mapAnalogLSYNeg->pinMask), (values & mapAnalogLSYPos->pinMask))) * scaledTilt1FactorLeftY;
+            leftXValue = getAnalogValue((dpad1 & GAMEPAD_MASK_LEFT), (dpad1 & GAMEPAD_MASK_RIGHT)) + (midValue - getAnalogValue((dpad1 & GAMEPAD_MASK_LEFT), (dpad1 & GAMEPAD_MASK_RIGHT))) * scaledTilt1FactorLeftX;
+            leftYValue = getAnalogValue((dpad1 & GAMEPAD_MASK_UP), (dpad1 & GAMEPAD_MASK_DOWN)) + (midValue - getAnalogValue((dpad1 & GAMEPAD_MASK_UP), (dpad1 & GAMEPAD_MASK_DOWN))) * scaledTilt1FactorLeftY;
 
-            rightXValue = getAnalogValue((values & mapAnalogRSXNeg->pinMask), (values & mapAnalogRSXPos->pinMask)) + (midValue - getAnalogValue((values & mapAnalogRSXNeg->pinMask), (values & mapAnalogRSXPos->pinMask))) * scaledTilt1FactorRightX;
-            rightYValue = getAnalogValue((values & mapAnalogRSYNeg->pinMask), (values & mapAnalogRSYPos->pinMask)) + (midValue - getAnalogValue((values & mapAnalogRSYNeg->pinMask), (values & mapAnalogRSYPos->pinMask))) * scaledTilt1FactorRightY;
+            rightXValue = getAnalogValue((dpad2 & GAMEPAD_MASK_LEFT), (dpad2 & GAMEPAD_MASK_RIGHT)) + (midValue - getAnalogValue((dpad2 & GAMEPAD_MASK_LEFT), (dpad2 & GAMEPAD_MASK_RIGHT))) * scaledTilt1FactorRightX;
+            rightYValue = getAnalogValue((dpad2 & GAMEPAD_MASK_UP), (dpad2 & GAMEPAD_MASK_DOWN)) + (midValue - getAnalogValue((dpad2 & GAMEPAD_MASK_UP), (dpad2 & GAMEPAD_MASK_DOWN))) * scaledTilt1FactorRightY;
         }
     } else {
         // analog input mode
         if (pinTilt1Pressed) {
-            leftXValue = getAnalogValue((values & mapAnalogLSXNeg->pinMask), (values & mapAnalogLSXPos->pinMask)) + (midValue - getAnalogValue((values & mapAnalogLSXNeg->pinMask), (values & mapAnalogLSXPos->pinMask))) * scaledTilt1FactorLeftX;
-            leftYValue = getAnalogValue((values & mapAnalogLSYNeg->pinMask), (values & mapAnalogLSYPos->pinMask)) + (midValue - getAnalogValue((values & mapAnalogLSYNeg->pinMask), (values & mapAnalogLSYPos->pinMask))) * scaledTilt1FactorLeftY;
+            leftXValue = getAnalogValue((dpad1 & GAMEPAD_MASK_LEFT), (dpad1 & GAMEPAD_MASK_RIGHT)) + (midValue - getAnalogValue((dpad1 & GAMEPAD_MASK_LEFT), (dpad1 & GAMEPAD_MASK_RIGHT))) * scaledTilt1FactorLeftX;
+            leftYValue = getAnalogValue((dpad1 & GAMEPAD_MASK_UP), (dpad1 & GAMEPAD_MASK_DOWN)) + (midValue - getAnalogValue((dpad1 & GAMEPAD_MASK_UP), (dpad1 & GAMEPAD_MASK_DOWN))) * scaledTilt1FactorLeftY;
+					
+					  rightXValue = getAnalogValue((dpad2 & GAMEPAD_MASK_LEFT), (dpad2 & GAMEPAD_MASK_RIGHT)) + (midValue - getAnalogValue((dpad2 & GAMEPAD_MASK_LEFT), (dpad2 & GAMEPAD_MASK_RIGHT))) * scaledTilt1FactorRightX;
+            rightYValue = getAnalogValue((dpad2 & GAMEPAD_MASK_UP), (dpad2 & GAMEPAD_MASK_DOWN)) + (midValue - getAnalogValue((dpad2 & GAMEPAD_MASK_UP), (dpad2 & GAMEPAD_MASK_DOWN))) * scaledTilt1FactorRightY;
+			  } else if (pinTilt2Pressed) {
+            leftXValue = getAnalogValue((dpad1 & GAMEPAD_MASK_LEFT), (dpad1 & GAMEPAD_MASK_RIGHT)) + (midValue - getAnalogValue((dpad1 & GAMEPAD_MASK_LEFT), (dpad1 & GAMEPAD_MASK_RIGHT))) * scaledTilt2FactorLeftX;
+            leftYValue = getAnalogValue((dpad1 & GAMEPAD_MASK_UP), (dpad1 & GAMEPAD_MASK_DOWN)) + (midValue - getAnalogValue((dpad1 & GAMEPAD_MASK_UP), (dpad1 & GAMEPAD_MASK_DOWN))) * scaledTilt2FactorLeftY;
+					
+            rightXValue = getAnalogValue((dpad2 & GAMEPAD_MASK_LEFT), (dpad2 & GAMEPAD_MASK_RIGHT)) + (midValue - getAnalogValue((dpad2 & GAMEPAD_MASK_LEFT), (dpad2 & GAMEPAD_MASK_RIGHT))) * scaledTilt2FactorRightX;
+            rightYValue = getAnalogValue((dpad2 & GAMEPAD_MASK_UP), (dpad2 & GAMEPAD_MASK_DOWN)) + (midValue - getAnalogValue((dpad2 & GAMEPAD_MASK_UP), (dpad2 & GAMEPAD_MASK_DOWN))) * scaledTilt2FactorRightY;
+				} else {
+            leftXValue = getAnalogValue((dpad1 & GAMEPAD_MASK_LEFT), (dpad1 & GAMEPAD_MASK_RIGHT));
+            leftYValue = getAnalogValue((dpad1 & GAMEPAD_MASK_UP), (dpad1 & GAMEPAD_MASK_DOWN));
 
-            rightXValue = getAnalogValue((values & mapAnalogRSXNeg->pinMask), (values & mapAnalogRSXPos->pinMask)) + (midValue - getAnalogValue((values & mapAnalogRSXNeg->pinMask), (values & mapAnalogRSXPos->pinMask))) * scaledTilt1FactorRightX;
-            rightYValue = getAnalogValue((values & mapAnalogRSYNeg->pinMask), (values & mapAnalogRSYPos->pinMask)) + (midValue - getAnalogValue((values & mapAnalogRSYNeg->pinMask), (values & mapAnalogRSYPos->pinMask))) * scaledTilt1FactorRightY;
-        } else if (pinTilt2Pressed) {
-            leftXValue = getAnalogValue((values & mapAnalogLSXNeg->pinMask), (values & mapAnalogLSXPos->pinMask)) + (midValue - getAnalogValue((values & mapAnalogLSXNeg->pinMask), (values & mapAnalogLSXPos->pinMask))) * scaledTilt2FactorLeftX;
-            leftYValue = getAnalogValue((values & mapAnalogLSYNeg->pinMask), (values & mapAnalogLSYPos->pinMask)) + (midValue - getAnalogValue((values & mapAnalogLSYNeg->pinMask), (values & mapAnalogLSYPos->pinMask))) * scaledTilt2FactorLeftY;
-
-            rightXValue = getAnalogValue((values & mapAnalogRSXNeg->pinMask), (values & mapAnalogRSXPos->pinMask)) + (midValue - getAnalogValue((values & mapAnalogRSXNeg->pinMask), (values & mapAnalogRSXPos->pinMask))) * scaledTilt2FactorRightX;
-            rightYValue = getAnalogValue((values & mapAnalogRSYNeg->pinMask), (values & mapAnalogRSYPos->pinMask)) + (midValue - getAnalogValue((values & mapAnalogRSYNeg->pinMask), (values & mapAnalogRSYPos->pinMask))) * scaledTilt2FactorRightY;
-        } else {
-            leftXValue = getAnalogValue((values & mapAnalogLSXNeg->pinMask), (values & mapAnalogLSXPos->pinMask));
-            leftYValue = getAnalogValue((values & mapAnalogLSYNeg->pinMask), (values & mapAnalogLSYPos->pinMask));
-
-            rightXValue = getAnalogValue((values & mapAnalogRSXNeg->pinMask), (values & mapAnalogRSXPos->pinMask));
-            rightYValue = getAnalogValue((values & mapAnalogRSYNeg->pinMask), (values & mapAnalogRSYPos->pinMask));
+            rightXValue = getAnalogValue((dpad2 & GAMEPAD_MASK_LEFT), (dpad2 & GAMEPAD_MASK_RIGHT));
+            rightYValue = getAnalogValue((dpad2 & GAMEPAD_MASK_UP), (dpad2 & GAMEPAD_MASK_DOWN));
         }
     }
 
